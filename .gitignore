@@ -1,1 +1,5 @@
-*/main
+main
+debug
+.DS_Store
+Info.plist
+.vscode/*
