@@ -11,8 +11,10 @@ int FileProcessor::sumFirstAndLast(const std::string& filePath) {
     }
 
     int runningTotal = 0;
+    int lineNum = 0;
     std::string line;
     while (std::getline(file, line)) {
+        lineNum++;
         int number = 0;
         int first_number_index = 0;
 
@@ -26,14 +28,14 @@ int FileProcessor::sumFirstAndLast(const std::string& filePath) {
             }
         }
 
-        for (size_t i = line.length() - 1; i > first_number_index; i--) {
+        for (size_t i = line.length() - 1; i >= first_number_index; i--) {
             if (std::isdigit(line[i])) {
                 number = number * 10 + (line[i] - '0');
                 break;
             }
         }
 
-        std::cout << "Current number: " << number << ".  Current sum: " << runningTotal << std::endl;
+        std::cout << "Line no. " << lineNum << " number: " << number << ".  Current sum: " << runningTotal << std::endl;
         runningTotal += number;
     }
 
