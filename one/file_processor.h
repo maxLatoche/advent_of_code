@@ -5,7 +5,7 @@
 
 class FileProcessor {
 public:
-    static int countLines(const std::string& filePath);
+    static int sumFirstAndLast(const std::string& filePath);
 };
 
 #endif

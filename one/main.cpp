@@ -10,11 +10,9 @@ int main(int argc, char** argv) {
 
     std::string filePath = argv[1];
 
-    int lineCount = FileProcessor::countLines(filePath);
+    int total = FileProcessor::sumFirstAndLast(filePath);
 
-    if (lineCount > 0) {
-        std::cout << "output: " << lineCount << std::endl;
-    }
+    std::cout << "output: " << total << std::endl;
 
     return 0;
 }
