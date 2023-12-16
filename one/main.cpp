@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 
     std::string filePath = argv[1];
 
-    int total = FileProcessor::sumFirstAndLast(filePath);
+    int total = FileProcessor::sumFirstAndLastWithStrings(filePath);
 
     std::cout << "output: " << total << std::endl;
 
