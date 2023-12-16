@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <set>
+#include <numeric>
 #include <tuple>
 
 std::unordered_map<std::string, int> colorLimits = {
@@ -11,8 +11,8 @@ std::unordered_map<std::string, int> colorLimits = {
     {"blue", 15},
 };
 
-
-std::string trim(const std::string& str) {
+std::string trim(const std::string &str)
+{
     const auto strBegin = str.find_first_not_of(" \t");
     if (strBegin == std::string::npos)
         return ""; // no content
@@ -22,7 +22,6 @@ std::string trim(const std::string& str) {
 
     return str.substr(strBegin, strRange);
 }
-
 
 bool isRoundValid(const std::string &round)
 {
@@ -57,6 +56,37 @@ bool isRoundValid(const std::string &round)
     return true;
 }
 
+void getRoundPower(const std::string &round, std::unordered_map<std::string, int> &maxFoundMap)
+{
+    const char delim = ',';
+    const char spaceDelim = ' ';
+
+    std::vector<std::string> parts;
+    std::string tempPart;
+
+    std::stringstream ss(round);
+
+    while (std::getline(ss, tempPart, delim))
+    {
+        parts.push_back(tempPart);
+    }
+
+    for (const auto &part : parts)
+    {
+        std::string color, count;
+        std::stringstream ssTwo(trim(part));
+        if (std::getline(ssTwo, count, spaceDelim))
+        {
+            std::getline(ssTwo, color);
+        }
+
+        if (std::stoi(count) > maxFoundMap[color])
+        {
+            maxFoundMap[color] = std::stoi(count);
+        }
+    }
+}
+
 int FileProcessor::countValidGames(const std::string &filePath)
 {
     std::ifstream file(filePath);
@@ -81,29 +111,53 @@ int FileProcessor::countValidGames(const std::string &filePath)
             std::getline(ssGame, rounds);
         }
 
+        std::unordered_map<std::string, int> maxFoundMap = {
+            {"maxRed", 0},
+            {"maxGreen", 0},
+            {"maxBlue", 0}};
+
         std::stringstream ssRounds(rounds);
-        bool isGameValid = true;
+        // bool isGameValid = true;
         while (std::getline(ssRounds, round, semicolonDelim))
         {
-            if (!isRoundValid(round))
-            {
-                isGameValid = false;
-                break;
-            }
+            getRoundPower(round, maxFoundMap);
         }
 
-        if (isGameValid)
-        {
-            std::string part1, part2;
-            std::stringstream ss(line);
-            const char spaceDelim = ' ';
+        int temp = std::accumulate(maxFoundMap.begin(), maxFoundMap.end(), 0,
+                                   [](int acc, const std::pair<const std::string, int> &p)
+                                   {
+                                       if (p.second == 0)
+                                       {
+                                           return acc;
+                                       }
+                                       if (acc == 0)
+                                       {
+                                           return p.second;
+                                       }
 
-            if (std::getline(ss, part1, spaceDelim))
-            {
-                std::getline(ss, part2);
-            }
-            runningTotal += std::stoi(part2);
-        }
+                                       return acc * p.second;
+                                   });
+        runningTotal += temp;
+        // {
+        //     if (!isRoundValid(round))
+        //     {
+        //         isGameValid = false;
+        //         break;
+        //     }
+        // }
+
+        // if (isGameValid)
+        // {
+        //     std::string part1, part2;
+        //     std::stringstream ss(line);
+        //     const char spaceDelim = ' ';
+
+        //     if (std::getline(ss, part1, spaceDelim))
+        //     {
+        //         std::getline(ss, part2);
+        //     }
+        //     runningTotal += std::stoi(part2);
+        // }
     }
 
     return runningTotal;
