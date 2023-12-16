@@ -66,6 +66,7 @@ static std::unordered_map<std::string, int> numberDictionary = {
     {"nine", 9},
 };
 
+// TODO: could dynamically generate this from numberDictionary, also, possibly both in file_processor.h?
 static std::set<std::string> mySet = {
     "zero",
     "one",
@@ -111,7 +112,6 @@ int FileProcessor::sumFirstAndLastWithStrings(const std::string &filePath)
         {
             if (std::isdigit(line[i]))
             {
-                // ascii chars 1 - 9 (ascii 49 to ascii 57) minus '0' (ascii 48) effectively casts to an int
                 int thisNumber = line[i];
 
                 if (firstNumber == '\0')
